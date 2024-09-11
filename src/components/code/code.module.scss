@@ -1,0 +1,51 @@
+@import '../../app/variables.scss';
+
+.block {
+  padding: 16px;
+  border: 1px solid $code-background;
+  border-radius: 5px;
+
+  &__title {
+    font-size: 20px;
+    font-weight: 500;
+
+    &__tag {
+      font-size: 14px;
+      font-weight: 400;
+      margin-left: 8px;
+      color: $code-background;
+    }
+  }
+
+  &__languages {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 16px;
+
+    &__language {
+      cursor: pointer;
+      padding: 8px;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+
+      &--active {
+        background: $code-background;
+        color: $background;
+      }
+    }
+  }
+
+  &__code {
+    padding-left: 16px;
+    padding-bottom: 16px;
+    background: $code-background;
+    color: $code-color;
+    white-space: pre-wrap;
+    line-height: 125%;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    font-size: 14px;
+  }
+}
