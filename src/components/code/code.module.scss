@@ -4,6 +4,7 @@
   padding: 16px;
   border: 1px solid $code-background;
   border-radius: 5px;
+  height: min-content;
 
   &__title {
     font-size: 20px;
