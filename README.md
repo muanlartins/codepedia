@@ -1,3 +1,5 @@
+[CodepediA](http://muanlartins.codepedia.s3-website.us-east-2.amazonaws.com/)
+
 ## Description
 
 A library with pieces of code I need to use all the time. Intended to save me GPT questions and google searches.
