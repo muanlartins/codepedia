@@ -45,11 +45,47 @@
     width: 370px;
   }
 
-  &__codes {
+  &__switch {
+    width: calc(100% - 128px);
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 16px;
+
+    &__option {
+      border: 1px solid $code-background;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      cursor: pointer;
+
+      &--active {
+        background: $code-background;
+        color: $background;
+      }
+
+      &:first-child {
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+    }
+  }
+
+  &__elements {
     margin: 32px 64px;
     width: calc(100% - 128px);
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 64px;
   }
 }

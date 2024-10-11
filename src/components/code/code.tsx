@@ -9,12 +9,14 @@ import React from "react";
 hljs.registerLanguage('javascript', javascript);
 
 export default function Code(props: any) {
-  const { title, tags, languages, codes, languageIndex, setLanguageIndex } = props;
+  const { element, languageIndex, setLanguageIndex } = props;
+  const { title, tags, languages, codes, link } = element;
 
   return (
     <div className={ styles.block }>
       <div className={ styles.block__title }>
-        { title }
+        { !link && title }
+        { link && <a target="_blank" className={ styles.block__title__link } href={link}>{ title }</a> }
         { tags.map((tag: any, index: number) => 
           <span key={index} className={ styles.block__title__tag }>{ tag }</span>) 
         }

@@ -11,7 +11,7 @@ const sourceCodePro = Source_Code_Pro({
 
 export const metadata: Metadata = {
   title: "CodepediA",
-  description: "The code library to save you the search effort.",
+  description: "An archive to save me the search effort.",
 };
 
 export default function RootLayout({

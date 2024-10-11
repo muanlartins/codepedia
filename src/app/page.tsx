@@ -4,26 +4,46 @@ import Search from "antd/es/input/Search";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import Code from "@/components/code/code";
-import { CODES } from "@/constants/codes";
+import { IElement } from "@/interfaces/code";
+import { SNIPPETS } from "@/constants/snippets";
+import { SOLUTIONS } from "@/constants/solutions";
 import React from "react";
+import { classIf } from "@/utils/classIf";
+
+enum SwitchOption {
+  snippet = 'SNIPPET',
+  solution = 'SOLUTION'
+}
+
+function getOption(option: SwitchOption) {
+  switch(option) {
+    case SwitchOption.snippet:
+      return SNIPPETS;
+    case SwitchOption.solution:
+      return SOLUTIONS;
+  }
+}
 
 export default function Home() {
-  const [codes, setCodes]: any = React.useState([]);
-  const [search, setSearch]: any = React.useState('');
-  const [languageIndex, setLanguageIndex]: any = React.useState(0);
+  const [elements, setElements] = React.useState<IElement[]>([]);
+  const [search, setSearch] = React.useState<string>('');
+  const [languageIndex, setLanguageIndex] = React.useState(0);
+  const [option, setOption] = React.useState<SwitchOption>(SwitchOption.snippet);
 
   React.useEffect(() => {
-    setCodes(CODES);
-  }, []);
+    setElements(getOption(option));
+  }, [option]);
 
   React.useEffect(() => {
     if (search) {
-      setCodes(codes.filter((code: any) => {
+      setElements(getOption(option).filter((code: any) => {
         return code.title.toLowerCase().includes(search.toLowerCase()) || 
-          code.tags.map((tag: string) => tag.toLowerCase()).includes(search.toLowerCase())
+          code.tags.map((tag: string) => tag.toLowerCase()).reduce(
+            (prev: boolean, curr: string) => prev || curr.includes(search.toLowerCase()), false
+          ) 
       }));
-    } else setCodes(CODES);
-  }, [codes, search]);
+    } else setElements(getOption(option));
+  }, [elements, search, option]);
 
   return (
     <div className={styles.page}>
@@ -39,7 +59,7 @@ export default function Home() {
           <div className={styles.page__logo__upper__text}>CodepediA</div>
         </div>
         <div className={styles.page__logo__lower}>
-          The code library to save you <br /> the search effort.
+          An archive to save me the search effort.
         </div>
       </div>
       <div className={styles.page__search}>
@@ -51,13 +71,26 @@ export default function Home() {
           onChange={(e) => { setSearch(e.target.value) }}
         />
       </div>
-      <div className={styles.page__codes}>
-        { codes.map((code: any, index: any) => <Code
+      <div className={styles.page__switch}>
+        <div 
+          className={`
+            ${styles.page__switch__option} 
+            ${classIf(styles['page__switch__option--active'], option === SwitchOption.snippet)}
+          `} 
+          onClick={() => setOption(SwitchOption.snippet)}
+        >Snippets</div>
+        <div 
+          className={`
+            ${styles.page__switch__option}
+            ${classIf(styles['page__switch__option--active'], option === SwitchOption.solution)}
+          `} 
+          onClick={() => setOption(SwitchOption.solution)}
+        >Solutions</div>
+      </div>
+      <div className={styles.page__elements}>
+        { elements.map((element: IElement, index: any) => <Code
             key={index}
-            title={code.title}
-            tags={code.tags}
-            languages={code.languages}
-            codes={code.codes}
+            element={element}
             languageIndex={languageIndex}
             setLanguageIndex={setLanguageIndex}
           ></Code>) }
