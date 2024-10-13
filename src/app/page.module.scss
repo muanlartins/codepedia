@@ -42,7 +42,11 @@
 
   &__search {
     margin-top: 32px;
-    width: 370px;
+    width: 500px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 32px;
   }
 
   &__switch {
@@ -85,7 +89,7 @@
     margin: 32px 64px;
     width: calc(100% - 128px);
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 64px;
   }
 }

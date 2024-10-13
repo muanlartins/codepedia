@@ -155,5 +155,56 @@ int main() {
 }
 `
 ]
+  },
+  {
+    title: 'Block Game',
+    tags: ['usaco'],
+    languages: ['cpp'],
+    link: 'https://www.usaco.org/index.php?page=viewproblem2&cpid=664',
+    codes: 
+[
+`
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const string ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+
+int main() {
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+  cout.tie(0);
+
+  freopen("blocks.in", "r", stdin);
+  freopen("blocks.out", "w", stdout);
+
+  int n;
+  cin >> n;
+
+  map<char, int> frequency;
+
+  while (n--) {
+    string front_word, back_word;
+    cin >> front_word >> back_word;
+
+    map<char, int> front_word_frequency, back_word_frequency;
+
+    for (char c : front_word)
+      front_word_frequency[c]++;
+    for (char c : back_word)
+      back_word_frequency[c]++;
+
+    for (char c : ALPHABET)
+      frequency[c] += max(front_word_frequency[c], back_word_frequency[c]);
   }
+
+
+  for (char c : ALPHABET)
+    cout << frequency[c] << '\\n';
+
+  return 0;
+}
+`
+]
+  },
 ]

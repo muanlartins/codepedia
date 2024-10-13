@@ -9,6 +9,7 @@ import { SNIPPETS } from "@/constants/snippets";
 import { SOLUTIONS } from "@/constants/solutions";
 import React from "react";
 import { classIf } from "@/utils/classIf";
+import { Select } from "antd";
 
 enum SwitchOption {
   snippet = 'SNIPPET',
@@ -27,12 +28,19 @@ function getOption(option: SwitchOption) {
 export default function Home() {
   const [elements, setElements] = React.useState<IElement[]>([]);
   const [search, setSearch] = React.useState<string>('');
+  const [columns, setColumns] = React.useState<string>();
   const [languageIndex, setLanguageIndex] = React.useState(0);
   const [option, setOption] = React.useState<SwitchOption>(SwitchOption.snippet);
 
   React.useEffect(() => {
     setElements(getOption(option));
   }, [option]);
+
+  React.useEffect(() => {
+    const columns = localStorage.getItem('columns');
+    if (columns)
+      setColumns(columns);
+  }, []);
 
   React.useEffect(() => {
     if (search) {
@@ -44,6 +52,11 @@ export default function Home() {
       }));
     } else setElements(getOption(option));
   }, [elements, search, option]);
+
+  const handleColumnsChange = (value: string) => {
+    setColumns(value);
+    localStorage.setItem('columns', value);
+  }
 
   return (
     <div className={styles.page}>
@@ -70,6 +83,16 @@ export default function Home() {
           value={search}
           onChange={(e) => { setSearch(e.target.value) }}
         />
+        <Select
+          value={columns}
+          style={{ width: 120 }}
+          onChange={handleColumnsChange}
+          options={[
+            { value: '1', label: '1' },
+            { value: '2', label: '2' },
+            { value: '3', label: '3' },
+          ]}
+        />
       </div>
       <div className={styles.page__switch}>
         <div 
@@ -87,7 +110,7 @@ export default function Home() {
           onClick={() => setOption(SwitchOption.solution)}
         >Solutions</div>
       </div>
-      <div className={styles.page__elements}>
+      <div style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}} className={styles.page__elements}>
         { elements.map((element: IElement, index: any) => <Code
             key={index}
             element={element}
