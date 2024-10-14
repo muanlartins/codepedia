@@ -3,14 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
   },
+  "keywords": [
+    "codepedia"
+  ],
+  "author": "muanlartins",
+  "license": "MIT",
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.0.1",
     "antd": "^5.20.6",
+    "codepedia-types": "^1.0.3",
     "highlight.js": "^11.10.0",
     "next": "14.2.9",
     "next-image-export-optimizer": "^1.15.1",

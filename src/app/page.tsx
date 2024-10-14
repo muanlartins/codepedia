@@ -4,53 +4,52 @@ import Search from "antd/es/input/Search";
 import styles from "./page.module.scss";
 import Image from "next/image";
 import Code from "@/components/code/code";
-import { IElement } from "@/interfaces/code";
-import { SNIPPETS } from "@/constants/snippets";
-import { SOLUTIONS } from "@/constants/solutions";
 import React from "react";
 import { classIf } from "@/utils/classIf";
 import { Select } from "antd";
-
-enum SwitchOption {
-  snippet = 'SNIPPET',
-  solution = 'SOLUTION'
-}
-
-function getOption(option: SwitchOption) {
-  switch(option) {
-    case SwitchOption.snippet:
-      return SNIPPETS;
-    case SwitchOption.solution:
-      return SOLUTIONS;
-  }
-}
+import { BASE_URL } from "@/constants/baseUrl";
+import { IElement }  from "codepedia-types/interfaces";
+import { ElementType }  from "codepedia-types/enums";
 
 export default function Home() {
   const [elements, setElements] = React.useState<IElement[]>([]);
+  const [filteredElements, setFilteredElements] = React.useState<IElement[]>([]);
   const [search, setSearch] = React.useState<string>('');
   const [columns, setColumns] = React.useState<string>();
   const [languageIndex, setLanguageIndex] = React.useState(0);
-  const [option, setOption] = React.useState<SwitchOption>(SwitchOption.snippet);
+  const [option, setOption] = React.useState<ElementType>(ElementType.snippet);
 
   React.useEffect(() => {
-    setElements(getOption(option));
-  }, [option]);
+    fetch(`${BASE_URL}/`, {
+      method: 'get'
+    }).then((data) => data.json()).then((data) => {
+      setElements(data);
+      setFilteredElements(data);
+    });
+
+  }, []);
 
   React.useEffect(() => {
     const columns = localStorage.getItem('columns');
     if (columns)
       setColumns(columns);
-  }, []);
+  }, [columns]);
 
   React.useEffect(() => {
-    if (search) {
-      setElements(getOption(option).filter((code: any) => {
-        return code.title.toLowerCase().includes(search.toLowerCase()) || 
-          code.tags.map((tag: string) => tag.toLowerCase()).reduce(
+    function filterElements(option: ElementType, search: string) {
+      if (!search) return setFilteredElements(elements.filter((element) => element.type === option));
+
+      return setFilteredElements(elements.filter((element) => 
+        element.type === option && (
+          element.title.toLowerCase().includes(search.toLowerCase()) || 
+          element.tags.map((tag: string) => tag.toLowerCase()).reduce(
             (prev: boolean, curr: string) => prev || curr.includes(search.toLowerCase()), false
           ) 
-      }));
-    } else setElements(getOption(option));
+        )
+      ))
+    }
+
+    filterElements(option, search);
   }, [elements, search, option]);
 
   const handleColumnsChange = (value: string) => {
@@ -98,20 +97,20 @@ export default function Home() {
         <div 
           className={`
             ${styles.page__switch__option} 
-            ${classIf(styles['page__switch__option--active'], option === SwitchOption.snippet)}
+            ${classIf(styles['page__switch__option--active'], option === ElementType.snippet)}
           `} 
-          onClick={() => setOption(SwitchOption.snippet)}
+          onClick={() => setOption(ElementType.snippet)}
         >Snippets</div>
         <div 
           className={`
             ${styles.page__switch__option}
-            ${classIf(styles['page__switch__option--active'], option === SwitchOption.solution)}
+            ${classIf(styles['page__switch__option--active'], option === ElementType.solution)}
           `} 
-          onClick={() => setOption(SwitchOption.solution)}
+          onClick={() => setOption(ElementType.solution)}
         >Solutions</div>
       </div>
       <div style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}} className={styles.page__elements}>
-        { elements.map((element: IElement, index: any) => <Code
+        { filteredElements.map((element: IElement, index: any) => <Code
             key={index}
             element={element}
             languageIndex={languageIndex}
