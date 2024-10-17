@@ -6,37 +6,75 @@ import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-dark.css";
 import javascript from 'highlight.js/lib/languages/javascript';
 import React from "react";
+import EditElementModal from "../edit-element-modal/edit-element-modal";
+import { IElement } from "codepedia-types/interfaces";
+import { CloseOutlined, EditOutlined } from "@ant-design/icons";
+import DeleteElementModal from "../delete-element-modal/delete-element-modal";
 hljs.registerLanguage('javascript', javascript);
 
-export default function Code(props: any) {
-  const { element, languageIndex, setLanguageIndex } = props;
+interface Props {
+  element: IElement;
+  setElements: React.Dispatch<React.SetStateAction<IElement[]>>;
+}
+
+export default function Code(props: Props) {
+  const { element, setElements } = props;
   const { title, tags, languages, codes, link } = element;
 
+  const [ isEditElementModalOpen, setIsEditElementModalOpen ] = React.useState<boolean>(false);
+  const [ isDeleteElementModalOpen, setIsDeleteElementModalOpen ] = React.useState<boolean>(false);
+
   return (
-    <div className={ styles.block }>
-      <div className={ styles.block__title }>
-        { !link && title }
-        { link && <a target="_blank" className={ styles.block__title__link } href={link}>{ title }</a> }
-        { tags.map((tag: any, index: number) => 
-          <span key={index} className={ styles.block__title__tag }>{ tag }</span>) 
-        }
+    <React.Fragment>
+      <div className={ styles.block }>
+        <div className={ styles.block__header }>
+          <div className={ styles.block__header__title }>
+            { link ? <a target="_blank" className={ styles.block__header__title__link } href={link}>{ title }</a> : title }
+          </div>
+          <div className={ styles.block__header__tags }>
+            { tags.map((tag: string) => 
+              <span key={tag} className={ styles.block__header__tags__tag }>{ tag }</span>) 
+            }
+          </div>
+          <div className={ styles.block__header__actions }>
+            <EditOutlined 
+              className={ styles.block__header__actions__action } 
+              onClick={() => setIsEditElementModalOpen(true)} 
+            />
+            <CloseOutlined 
+              className={ styles.block__header__actions__action } 
+              onClick={() => setIsDeleteElementModalOpen(true)} 
+            />
+          </div>
+        </div>
+        <div className={ styles.block__languages }>
+          { languages.map((language: string) => 
+            <span 
+              key={language} 
+              className={` 
+                ${styles.block__languages__language} 
+                ${styles['block__languages__language--active']}
+              `}
+            >{ language }</span>) 
+          }
+        </div>
+        <pre className={ styles.block__code }>
+          <code dangerouslySetInnerHTML={{ __html: hljs.highlight(codes[0], { language: languages[0] }).value }}>
+          </code>
+        </pre>
       </div>
-      <div className={ styles.block__languages }>
-        { languages.map((language: any, index: number) => 
-          <span 
-            key={index} 
-            className={` 
-              ${styles.block__languages__language} 
-              ${index === languageIndex && styles['block__languages__language--active']}
-            `}
-            onClick={ () => setLanguageIndex(index) }
-          >{ language }</span>) 
-        }
-      </div>
-      <pre className={ styles.block__code }>
-        <code dangerouslySetInnerHTML={{ __html: hljs.highlight(codes[languageIndex], { language: languages[languageIndex] }).value }}>
-        </code>
-      </pre>
-    </div>
+      <EditElementModal 
+        isModalOpen={isEditElementModalOpen} 
+        setIsModalOpen={setIsEditElementModalOpen}
+        element={element}
+        setElements={setElements}
+      ></EditElementModal>
+      <DeleteElementModal 
+        isModalOpen={isDeleteElementModalOpen} 
+        setIsModalOpen={setIsDeleteElementModalOpen}
+        element={element}
+        setElements={setElements}
+      ></DeleteElementModal>
+    </React.Fragment>
   )
 }

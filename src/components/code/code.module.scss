@@ -1,24 +1,48 @@
-@import '../../app/variables.scss';
+@import '@/variables.scss';
 
 .block {
   padding: 16px;
-  border: 1px solid $code-background;
+  border: 1px solid $primary;
   border-radius: 5px;
   height: min-content;
 
-  &__title {
-    font-size: 20px;
-    font-weight: 500;
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 8px;
 
-    &__link {
-      
+    &__title {
+      font-size: 20px;
+      font-weight: 500;
     }
 
-    &__tag {
-      font-size: 14px;
-      font-weight: 400;
-      margin-left: 8px;
-      color: $code-background;
+    &__tags {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: flex-end;
+      gap: 8px;
+
+      &__tag {
+        font-size: 14px;
+        font-weight: 400;
+        color: $primary;
+      }
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+
+      &__action {
+        cursor: pointer;
+      }
     }
   }
 
@@ -36,16 +60,15 @@
       border-top-right-radius: 5px;
 
       &--active {
-        background: $code-background;
+        background: $primary;
         color: $background;
       }
     }
   }
 
   &__code {
-    padding-left: 16px;
-    padding-bottom: 16px;
-    background: $code-background;
+    padding: 16px;
+    background: $primary;
     color: $code-color;
     white-space: pre-wrap;
     line-height: 125%;

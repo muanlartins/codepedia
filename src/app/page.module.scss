@@ -1,4 +1,4 @@
-@import './variables.scss';
+@import '@/variables.scss';
 
 .page {
   width: 100%;
@@ -59,7 +59,7 @@
     margin-top: 16px;
 
     &__option {
-      border: 1px solid $code-background;
+      border: 1px solid $primary;
       width: 100%;
       display: flex;
       flex-direction: row;
@@ -69,7 +69,7 @@
       cursor: pointer;
 
       &--active {
-        background: $code-background;
+        background: $primary;
         color: $background;
       }
 

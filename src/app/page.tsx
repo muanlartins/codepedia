@@ -6,31 +6,33 @@ import Image from "next/image";
 import Code from "@/components/code/code";
 import React from "react";
 import { classIf } from "@/utils/classIf";
-import { Select } from "antd";
-import { BASE_URL } from "@/constants/baseUrl";
+import { FloatButton, Select } from "antd";
 import { IElement }  from "codepedia-types/interfaces";
 import { ElementType }  from "codepedia-types/enums";
+import { PlusOutlined } from "@ant-design/icons";
+import AddElementModal from "@/components/add-element-modal/add-element-modal";
+import { getElements } from "@/services/element";
+import Password from "antd/es/input/Password";
+import { getItem, setItem } from "@/utils/localStorage";
 
 export default function Home() {
   const [elements, setElements] = React.useState<IElement[]>([]);
   const [filteredElements, setFilteredElements] = React.useState<IElement[]>([]);
-  const [search, setSearch] = React.useState<string>('');
-  const [columns, setColumns] = React.useState<string>();
-  const [languageIndex, setLanguageIndex] = React.useState(0);
+  const [search, setSearch] = React.useState<string>("");
+  const [columns, setColumns] = React.useState<string>("");
   const [option, setOption] = React.useState<ElementType>(ElementType.snippet);
+  const [password, setPassword] = React.useState<string>("");
+
+  const [isAddElementModalOpen, setIsAddElementModalOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    fetch(`${BASE_URL}/`, {
-      method: 'get'
-    }).then((data) => data.json()).then((data) => {
+    getElements().then((data) => {
       setElements(data);
-      setFilteredElements(data);
     });
-
   }, []);
 
   React.useEffect(() => {
-    const columns = localStorage.getItem('columns');
+    const columns = getItem('columns');
     if (columns)
       setColumns(columns);
   }, [columns]);
@@ -54,11 +56,25 @@ export default function Home() {
 
   const handleColumnsChange = (value: string) => {
     setColumns(value);
-    localStorage.setItem('columns', value);
+    setItem('columns', value);
+  }
+
+  React.useEffect(() => {
+    const password = getItem('password');
+    if (password)
+      setPassword(password);
+  }, [password]);
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setPassword(value);
+    setItem('password', value);
   }
 
   return (
     <div className={styles.page}>
+      <FloatButton icon={<PlusOutlined />} onClick={() => setIsAddElementModalOpen(true)} />
       <div className={styles.page__logo}>
         <div className={styles.page__logo__upper}>
           <Image 
@@ -80,7 +96,7 @@ export default function Home() {
           placeholder="Search for code" 
           allowClear 
           value={search}
-          onChange={(e) => { setSearch(e.target.value) }}
+          onChange={(e) => setSearch(e.target.value) }
         />
         <Select
           value={columns}
@@ -91,6 +107,11 @@ export default function Home() {
             { value: '2', label: '2' },
             { value: '3', label: '3' },
           ]}
+        />
+        <Password
+          value={password}
+          placeholder="Password"
+          onChange={handlePasswordChange}
         />
       </div>
       <div className={styles.page__switch}>
@@ -110,13 +131,17 @@ export default function Home() {
         >Solutions</div>
       </div>
       <div style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}} className={styles.page__elements}>
-        { filteredElements.map((element: IElement, index: any) => <Code
-            key={index}
+        { filteredElements.map((element: IElement) => <Code
+            key={element.id}
             element={element}
-            languageIndex={languageIndex}
-            setLanguageIndex={setLanguageIndex}
+            setElements={setElements}
           ></Code>) }
       </div>
+      <AddElementModal 
+        setElements={setElements}
+        isModalOpen={isAddElementModalOpen} 
+        setIsModalOpen={setIsAddElementModalOpen} 
+      ></AddElementModal>
     </div>
   );
 }

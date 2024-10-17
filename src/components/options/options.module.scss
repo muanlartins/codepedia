@@ -1,0 +1,44 @@
+@import '@/variables.scss';
+
+.options {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  &__option {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 2px 20px 4px 8px;
+    border: 1px solid $primary;
+    border-radius: 16px;
+
+    &__text {
+      line-height: 100%;
+      font-size: 12px;
+      display: flex;
+      vertical-align: middle;
+      user-select: none;
+    }
+
+    &__image {
+      width: 8px;
+      height: 8px;
+
+      position: absolute;
+      right: 8px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      cursor: pointer;
+    }
+  }
+}
