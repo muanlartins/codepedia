@@ -1,24 +1,32 @@
 import { Button, Modal } from "antd";
 import React from "react";
-import { IElement } from "codepedia-types/interfaces";
 import ElementForm from "../element-form/element-form";
+import { Element }  from "codepedia-types/interfaces";
 import { addElement } from "@/services/element";
 
 interface Props {
-  setElements: React.Dispatch<React.SetStateAction<IElement[]>>;
+  initialFormData?: Element;
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function AddElementModal(props: Props) {
-  const { setElements, isModalOpen, setIsModalOpen } = props;
+  const { initialFormData, setElements, isModalOpen, setIsModalOpen } = props;
   
-  const [formData, setFormData] = React.useState<IElement>({} as IElement);
+  const [formData, setFormData] = React.useState<Element>({} as Element);
+
+  React.useEffect(() => {
+    if (initialFormData)
+      setFormData(initialFormData);
+  }, [initialFormData]);
 
   const handleSubmit = () => {
     setIsModalOpen(false);
 
-    addElement(formData).then((elements: IElement[]) => setElements(elements));
+    addElement(formData).then((elements: Element[]) => setElements(elements));
+
+    setFormData({} as Element);
   }
 
   return (
@@ -36,7 +44,7 @@ export default function AddElementModal(props: Props) {
         </Button>,
       ]}
     >
-      <ElementForm setFormData={setFormData}></ElementForm>
+      <ElementForm formData={formData} setFormData={setFormData}></ElementForm>
     </Modal>
   )
 }

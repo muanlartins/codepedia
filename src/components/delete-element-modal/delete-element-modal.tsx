@@ -1,13 +1,13 @@
 import { Button, Modal } from "antd";
 import React from "react";
-import { IElement } from "codepedia-types/interfaces";
 import { deleteElement } from "@/services/element";
+import { Element }  from "codepedia-types/interfaces";
 
 interface Props {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  element: IElement;
-  setElements: React.Dispatch<React.SetStateAction<IElement[]>>;
+  element: Element;
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
 }
 
 export default function EditElementModal(props: Props) {
@@ -16,7 +16,7 @@ export default function EditElementModal(props: Props) {
   const handleSubmit = () => {
     setIsModalOpen(false);
 
-    deleteElement(element).then((elements: IElement[]) => setElements(elements));
+    deleteElement(element).then((elements: Element[]) => setElements(elements));
   }
 
   return (

@@ -7,8 +7,8 @@ import Code from "@/components/code/code";
 import React from "react";
 import { classIf } from "@/utils/classIf";
 import { FloatButton, Select } from "antd";
-import { IElement }  from "codepedia-types/interfaces";
 import { ElementType }  from "codepedia-types/enums";
+import { Element }  from "codepedia-types/interfaces";
 import { PlusOutlined } from "@ant-design/icons";
 import AddElementModal from "@/components/add-element-modal/add-element-modal";
 import { getElements } from "@/services/element";
@@ -16,8 +16,8 @@ import Password from "antd/es/input/Password";
 import { getItem, setItem } from "@/utils/localStorage";
 
 export default function Home() {
-  const [elements, setElements] = React.useState<IElement[]>([]);
-  const [filteredElements, setFilteredElements] = React.useState<IElement[]>([]);
+  const [elements, setElements] = React.useState<Element[]>([]);
+  const [filteredElements, setFilteredElements] = React.useState<Element[]>([]);
   const [search, setSearch] = React.useState<string>("");
   const [columns, setColumns] = React.useState<string>("");
   const [option, setOption] = React.useState<ElementType>(ElementType.snippet);
@@ -131,13 +131,16 @@ export default function Home() {
         >Solutions</div>
       </div>
       <div style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}} className={styles.page__elements}>
-        { filteredElements.map((element: IElement) => <Code
+        { filteredElements.map((element: Element) => <Code
             key={element.id}
             element={element}
             setElements={setElements}
           ></Code>) }
       </div>
       <AddElementModal 
+        initialFormData={{
+          type: option
+        } as Element}
         setElements={setElements}
         isModalOpen={isAddElementModalOpen} 
         setIsModalOpen={setIsAddElementModalOpen} 

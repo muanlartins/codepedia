@@ -3,64 +3,83 @@ import Options from "../options/options";
 import TextArea from "antd/es/input/TextArea";
 import { ElementType } from "codepedia-types/enums";
 import React from "react";
-import { IElement } from "codepedia-types/interfaces";
+import { Element } from "codepedia-types/interfaces";
 
 interface Props {
-  formData?: IElement,
-  setFormData: React.Dispatch<React.SetStateAction<IElement>>
+  formData?: Element,
+  setFormData: React.Dispatch<React.SetStateAction<Element>>
 }
 
 export default function ElementForm(props: Props) {  
   const { formData, setFormData } = props;
 
-  const [type, setType] = React.useState<ElementType>(formData?.type ?? ElementType.snippet);
-  const [title, setTitle] = React.useState<string>(formData?.title ?? '');
   const [tag, setTag] = React.useState<string>('');
-  const [tags, setTags] = React.useState<string[]>(formData?.tags ?? []);
-  const [language, setLanguage] = React.useState<string>(formData?.languages[0] ?? '');
-  const [code, setCode] = React.useState<string>(formData?.codes[0] ?? '');
-  const [link, setLink] = React.useState<string>(formData?.link ?? '');
+  const [language, setLanguage] = React.useState<string>(formData?.languages?.[0] || '');
+  const [code, setCode] = React.useState<string>(formData?.codes?.[0] || '');
 
-  React.useEffect(() => {
-    const element: IElement = {
-      id: formData?.id ?? '',
-      title,
-      tags,
-      languages: [language],
-      codes: [code],
-      link,
-      type
-    }
-
-    setFormData(element);
-  }, [formData, type, title, tags, language, code, link, setFormData]);
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, 
-    setElement: React.Dispatch<React.SetStateAction<string>>,
-    elements: string[],
-    setElements: React.Dispatch<React.SetStateAction<string[]>>
+  const handleTagChange = (
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = e.target.value;
 
-    setElement(value);
+    setTag(value);
 
     if (value[value.length-1] == " ") {
-      if (value.length === 1) return setElement('');
+      if (value.length === 1) return setTag('');
 
-      const newElements = [...elements, value.substring(0, value.length-1)];
-      setElements(newElements);
-      setElement('');
+      const tags = 
+        formData?.tags ? 
+        [...formData?.tags, value.substring(0, value.length-1)] :
+        [value.substring(0, value.length-1)];
+      
+      setFormData({
+        ...formData,
+        tags
+      } as Element);
+      setTag('');
     }
+  }
+
+  const handleLanguageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = e.target.value;
+
+    setLanguage(value);
+
+    setFormData({
+      ...formData,
+      languages: [value]
+    } as Element);
+  }
+
+  const handleCodeChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+
+    setCode(value);
+
+    setFormData({
+      ...formData,
+      codes: [value]
+    } as Element);
+  }
+
+  const handleChange = (field: string, value: any) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    } as Element);
   }
 
   return (
     <Form layout="vertical">
       <Form.Item>
         <Select
-          value={type}
+          value={formData?.type}
           style={{ width: 120 }}
-          onChange={(value: ElementType) => setType(value)}
+          onChange={(value: ElementType) => handleChange('type', value)}
           options={Object.values(ElementType).map((type: string) => ({
             value: type,
             label: type
@@ -68,20 +87,20 @@ export default function ElementForm(props: Props) {
         />
       </Form.Item>
       <Form.Item label="Title">
-        <Input value={title} onChange={(e) => setTitle(e.target.value)}></Input>
+        <Input value={formData?.title} onChange={(e) => handleChange('title', e.target.value)}></Input>
         </Form.Item>
       <Form.Item label="Tag">
-        <Input value={tag} onChange={(e) => handleInputChange(e, setTag, tags, setTags)}></Input>
+        <Input value={tag} onChange={handleTagChange}></Input>
       </Form.Item>
-      <Options options={tags} setOptions={setTags}></Options>
+      <Options field="tags" formData={formData} setFormData={setFormData}></Options>
       <Form.Item label="Language">
-        <Input value={language} onChange={(e) => setLanguage(e.target.value)}></Input>
+        <Input value={language} onChange={handleLanguageChange}></Input>
       </Form.Item>
       <Form.Item label="Code">
-        <TextArea autoSize value={code} onChange={(e) => setCode(e.target.value)}></TextArea>
+        <TextArea autoSize value={code} onChange={handleCodeChange}></TextArea>
       </Form.Item>
-      { type === ElementType.solution && <Form.Item label="Link">
-        <Input value={link} onChange={(e) => setLink(e.target.value)}></Input>
+      { formData?.type === ElementType.solution && <Form.Item label="Link">
+        <Input value={formData?.link} onChange={(e) => handleChange('link', e.target.value)}></Input>
       </Form.Item> }
     </Form>
   )

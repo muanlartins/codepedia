@@ -3,13 +3,18 @@ import styles from "./options.module.scss";
 import React from "react";
 
 export default function Options(props: any) {
-  const { options, setOptions } = props;
+  const { field, formData, setFormData } = props;
+
+  const options = formData ? formData[field] : [];
 
   const removeOption = (index: number) => {
     const newOptions = [...options];
     newOptions.splice(index, 1);
 
-    setOptions(newOptions);
+    setFormData({
+      ...formData,
+      [field]: newOptions
+    });
   }
 
   return (

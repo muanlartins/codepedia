@@ -7,19 +7,21 @@ import "highlight.js/styles/atom-one-dark.css";
 import javascript from 'highlight.js/lib/languages/javascript';
 import React from "react";
 import EditElementModal from "../edit-element-modal/edit-element-modal";
-import { IElement } from "codepedia-types/interfaces";
 import { CloseOutlined, EditOutlined } from "@ant-design/icons";
 import DeleteElementModal from "../delete-element-modal/delete-element-modal";
+import { Element }  from "codepedia-types/interfaces";
+import { ElementType } from "codepedia-types/enums";
 hljs.registerLanguage('javascript', javascript);
 
 interface Props {
-  element: IElement;
-  setElements: React.Dispatch<React.SetStateAction<IElement[]>>;
+  element: Element;
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
 }
 
 export default function Code(props: Props) {
   const { element, setElements } = props;
-  const { title, tags, languages, codes, link } = element;
+  const { title, tags, languages, codes } = element;
+  const link = element.type === ElementType.solution ? element.link : undefined;
 
   const [ isEditElementModalOpen, setIsEditElementModalOpen ] = React.useState<boolean>(false);
   const [ isDeleteElementModalOpen, setIsDeleteElementModalOpen ] = React.useState<boolean>(false);

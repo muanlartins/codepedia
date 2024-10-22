@@ -2,7 +2,7 @@
 
 import { BASE_URL } from "@/constants/baseUrl";
 import { getItem } from "@/utils/localStorage";
-import { IElement } from "codepedia-types/interfaces";
+import { Element }  from "codepedia-types/interfaces";
 
 const headers = {
   "Content-Type": "application/json",
@@ -13,10 +13,10 @@ export function getElements() {
   return fetch(`${BASE_URL}/`, {
     method: 'get',
     headers,
-  }).then((data) => data.json() as Promise<IElement[]>);
+  }).then((data) => data.json() as Promise<Element[]>);
 }
 
-export function addElement(element: IElement) {
+export function addElement(element: Element) {
   return fetch(`${BASE_URL}/`, {
     method: 'POST',
     headers,
@@ -24,7 +24,7 @@ export function addElement(element: IElement) {
   }).then(() => getElements());
 }
 
-export function editElement(element: IElement) {
+export function editElement(element: Element) {
   return fetch(`${BASE_URL}/`, {
     method: 'PUT',
     headers,
@@ -32,7 +32,7 @@ export function editElement(element: IElement) {
   }).then(() => getElements());
 }
 
-export function deleteElement(element: IElement) {
+export function deleteElement(element: Element) {
   return fetch(`${BASE_URL}/`, {
     method: 'DELETE',
     headers,

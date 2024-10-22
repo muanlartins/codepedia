@@ -1,25 +1,25 @@
 import { Button, Modal } from "antd";
 import React from "react";
-import { IElement } from "codepedia-types/interfaces";
 import ElementForm from "../element-form/element-form";
 import { editElement } from "@/services/element";
+import { Element }  from "codepedia-types/interfaces";
 
 interface Props {
   isModalOpen: boolean;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  element: IElement;
-  setElements: React.Dispatch<React.SetStateAction<IElement[]>>;
+  element: Element;
+  setElements: React.Dispatch<React.SetStateAction<Element[]>>;
 }
 
 export default function EditElementModal(props: Props) {
   const { element, setElements, isModalOpen, setIsModalOpen } = props;
   
-  const [formData, setFormData] = React.useState<IElement>(element);
+  const [formData, setFormData] = React.useState<Element>(element);
 
   const handleSubmit = () => {
     setIsModalOpen(false);
 
-    editElement(formData).then((elements: IElement[]) => setElements(elements));
+    editElement(formData).then((elements: Element[]) => setElements(elements));
   }
 
   return (
