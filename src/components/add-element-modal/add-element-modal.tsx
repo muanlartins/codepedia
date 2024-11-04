@@ -1,6 +1,6 @@
 import { Button, Modal } from "antd";
 import React from "react";
-import ElementForm from "../element-form/element-form";
+import ElementForm, { Handle } from "../element-form/element-form";
 import { Element }  from "codepedia-types/interfaces";
 import { addElement } from "@/services/element";
 
@@ -16,6 +16,8 @@ export default function AddElementModal(props: Props) {
   
   const [formData, setFormData] = React.useState<Element>({} as Element);
 
+  const elementFormRef = React.createRef<Handle>();
+
   React.useEffect(() => {
     if (initialFormData)
       setFormData(initialFormData);
@@ -26,7 +28,7 @@ export default function AddElementModal(props: Props) {
 
     addElement(formData).then((elements: Element[]) => setElements(elements));
 
-    setFormData({} as Element);
+    elementFormRef.current?.clearForm();
   }
 
   return (
@@ -44,7 +46,7 @@ export default function AddElementModal(props: Props) {
         </Button>,
       ]}
     >
-      <ElementForm formData={formData} setFormData={setFormData}></ElementForm>
+      <ElementForm ref={elementFormRef} formData={formData} setFormData={setFormData}></ElementForm>
     </Modal>
   )
 }

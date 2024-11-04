@@ -1,7 +1,7 @@
 'use client';
 
-import { BASE_URL } from "@/constants/baseUrl";
-import { getItem } from "@/utils/localStorage";
+import { BASE_URL } from "@/constants/base-url";
+import { getItem } from "@/utils/local-storage";
 import { Element }  from "codepedia-types/interfaces";
 
 const headers = {

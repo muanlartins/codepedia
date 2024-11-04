@@ -1,10 +1,12 @@
 @import '@/variables.scss';
 
 .block {
+  break-inside: avoid;
   padding: 16px;
   border: 1px solid $primary;
   border-radius: 5px;
   height: min-content;
+  margin-bottom: 64px;
 
   &__header {
     display: flex;

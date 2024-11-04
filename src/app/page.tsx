@@ -5,7 +5,7 @@ import styles from "./page.module.scss";
 import Image from "next/image";
 import Code from "@/components/code/code";
 import React from "react";
-import { classIf } from "@/utils/classIf";
+import { classIf } from "@/utils/class-if";
 import { FloatButton, Select } from "antd";
 import { ElementType }  from "codepedia-types/enums";
 import { Element }  from "codepedia-types/interfaces";
@@ -13,7 +13,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import AddElementModal from "@/components/add-element-modal/add-element-modal";
 import { getElements } from "@/services/element";
 import Password from "antd/es/input/Password";
-import { getItem, setItem } from "@/utils/localStorage";
+import { getItem, setItem } from "@/utils/local-storage";
 
 export default function Home() {
   const [elements, setElements] = React.useState<Element[]>([]);
@@ -130,7 +130,7 @@ export default function Home() {
           onClick={() => setOption(ElementType.solution)}
         >Solutions</div>
       </div>
-      <div style={{gridTemplateColumns: `repeat(${columns}, 1fr)`}} className={styles.page__elements}>
+      <div style={{columns: `${columns}`}} className={styles.page__elements}>
         { filteredElements.map((element: Element) => <Code
             key={element.id}
             element={element}

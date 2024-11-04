@@ -88,8 +88,7 @@
   &__elements {
     margin: 32px 64px;
     width: calc(100% - 128px);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    columns: 2;
     gap: 64px;
   }
 }

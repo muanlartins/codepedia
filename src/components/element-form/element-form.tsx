@@ -10,12 +10,24 @@ interface Props {
   setFormData: React.Dispatch<React.SetStateAction<Element>>
 }
 
-export default function ElementForm(props: Props) {  
+export interface Handle {
+  clearForm: () => void
+}
+
+const ElementForm = React.forwardRef<Handle, Props>((props: Props, ref: React.ForwardedRef<Handle>) => {  
   const { formData, setFormData } = props;
 
   const [tag, setTag] = React.useState<string>('');
   const [language, setLanguage] = React.useState<string>(formData?.languages?.[0] || '');
   const [code, setCode] = React.useState<string>(formData?.codes?.[0] || '');
+
+  React.useImperativeHandle(ref, () => ({
+    clearForm() {
+      setFormData({} as Element)
+      setLanguage('');
+      setCode('');
+    }
+  }));
 
   const handleTagChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -104,4 +116,8 @@ export default function ElementForm(props: Props) {
       </Form.Item> }
     </Form>
   )
-}
+});
+
+ElementForm.displayName = 'ElementForm';
+
+export default ElementForm;
